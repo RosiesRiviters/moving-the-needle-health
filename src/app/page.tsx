@@ -1,18 +1,11 @@
 "use client";
 
 import { useState } from "react";
-
-const PLACEHOLDER_SCENARIOS = [
-  "Hey, everyone's going to Jake's party tonight and there's gonna be drinks. You HAVE to come, don't be boring!",
-  "Come on, just try it once. It's not a big deal, everyone does it. No one will even know.",
-  "If you were really my friend, you'd do this for me. I thought I could count on you.",
-  "You're overreacting. It's just a little fun. Stop being so uptight about everything.",
-  "I dare you to do it. Unless you're scared? I knew you couldn't handle it.",
-];
+import { scenarios, type Scenario } from "@/data/scenarios";
 
 export default function Home() {
-  const [currentScenario, setCurrentScenario] = useState(
-    PLACEHOLDER_SCENARIOS[0]
+  const [currentScenario, setCurrentScenario] = useState<Scenario>(
+    () => scenarios[Math.floor(Math.random() * scenarios.length)]
   );
   const [userResponse, setUserResponse] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -20,9 +13,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   function loadNextScenario() {
-    const remaining = PLACEHOLDER_SCENARIOS.filter(
-      (s) => s !== currentScenario
-    );
+    const remaining = scenarios.filter((s) => s.id !== currentScenario.id);
     setCurrentScenario(remaining[Math.floor(Math.random() * remaining.length)]);
     setUserResponse("");
     setFeedback(null);
@@ -59,11 +50,19 @@ export default function Home() {
 
         {/* Scenario bubble */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-            Incoming Message
-          </p>
+          <div className="mb-3 flex items-center gap-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+              Incoming Message
+            </p>
+            <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium capitalize text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+              {currentScenario.category}
+            </span>
+            <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium capitalize text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+              {currentScenario.difficulty}
+            </span>
+          </div>
           <p className="text-lg leading-relaxed text-zinc-800 dark:text-zinc-200">
-            &ldquo;{currentScenario}&rdquo;
+            &ldquo;{currentScenario.message}&rdquo;
           </p>
         </div>
 
