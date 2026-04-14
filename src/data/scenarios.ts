@@ -1,96 +1,100 @@
 export type Category = "peer pressure" | "boundaries" | "manipulation";
 export type Difficulty = "easy" | "medium" | "hard";
 
-export interface Scenario {
-  id: number;
-  message: string;
-  category: Category;
-  difficulty: Difficulty;
+export interface ScenarioRequirements {
+  tone: string;
+  tactics: string[];
+  context: string;
 }
 
-export const scenarios: Scenario[] = [
-  {
-    id: 1,
-    message:
-      "Come on, just send me a pic. It's just between us, I promise I won't show anyone. Don't you trust me?",
-    category: "boundaries",
-    difficulty: "hard",
+export const CATEGORIES: Category[] = ["peer pressure", "boundaries", "manipulation"];
+export const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
+
+export const scenarioRequirements: Record<
+  Category,
+  Record<Difficulty, ScenarioRequirements>
+> = {
+  "peer pressure": {
+    easy: {
+      tone: "Casual and friendly, low-intensity pressure",
+      tactics: ["bandwagon appeal", "casual minimising"],
+      context:
+        "A friend casually suggesting something mildly risky like skipping class, trying a vape, or sneaking out. Easy to spot the pressure.",
+    },
+    medium: {
+      tone: "Persistent and socially charged",
+      tactics: ["social exclusion threat", "repeated asking", "mocking hesitation"],
+      context:
+        "A group situation where the person uses social standing or group dynamics to pressure — e.g. party invitations with alcohol, dares in a group chat, pressure to share content online.",
+    },
+    hard: {
+      tone: "Aggressive, confrontational, or deeply manipulative",
+      tactics: [
+        "public shaming",
+        "ultimatums",
+        "claiming everyone else has done it",
+        "questioning loyalty",
+      ],
+      context:
+        "High-stakes pressure involving sharing photos, substance use, or dangerous activities. The sender uses multiple tactics in one message and makes it very hard to refuse without social consequences.",
+    },
   },
-  {
-    id: 2,
-    message:
-      "I can't believe you won't do this for me after everything I've done for you. I guess you don't really care about our friendship.",
-    category: "manipulation",
-    difficulty: "medium",
+  boundaries: {
+    easy: {
+      tone: "Dismissive but not hostile",
+      tactics: ["brushing off a stated limit", "playful teasing about the boundary"],
+      context:
+        "Someone lightly ignoring a boundary like borrowing something without asking, reading your messages, or showing up unannounced. Straightforward to address.",
+    },
+    medium: {
+      tone: "Persistent and guilt-tinged",
+      tactics: [
+        "repeatedly asking after being told no",
+        "acting hurt when a boundary is set",
+        "minimising the boundary",
+      ],
+      context:
+        "Someone pushing a personal or digital boundary — e.g. insisting on seeing your phone, pressuring you to share passwords, or not accepting 'no' about physical affection.",
+    },
+    hard: {
+      tone: "Controlling, entitled, or threatening",
+      tactics: [
+        "ignoring consent entirely",
+        "taking screenshots without permission",
+        "pressuring for intimate photos",
+        "claiming rights over the other person",
+      ],
+      context:
+        "Serious boundary violations — pressuring for photos or private content, refusing to delete something shared in confidence, or escalating when boundaries are set. May involve romantic relationship dynamics.",
+    },
   },
-  {
-    id: 3,
-    message:
-      "I already told everyone you're coming tonight. You can't back out now, that would make ME look bad. Just come, it'll be fine.",
-    category: "peer pressure",
-    difficulty: "medium",
+  manipulation: {
+    easy: {
+      tone: "Subtly guilt-tripping",
+      tactics: ["guilt trip", "playing the victim"],
+      context:
+        "A friend making you feel bad for not doing what they want — e.g. 'I guess I'll just go alone then' or 'fine, forget I asked.' Easy to recognise the emotional ploy.",
+    },
+    medium: {
+      tone: "Emotionally charged and calculated",
+      tactics: [
+        "conditional love or friendship",
+        "weaponising secrets",
+        "making you feel responsible for their emotions",
+      ],
+      context:
+        "Someone using the relationship itself as leverage — e.g. 'if you were really my friend you'd do this', threatening to spread rumours, or using past favours as leverage.",
+    },
+    hard: {
+      tone: "Coercive, threatening, or deeply emotionally abusive",
+      tactics: [
+        "blackmail or threats to expose",
+        "isolating from other friends",
+        "gaslighting",
+        "love-bombing then withdrawing",
+      ],
+      context:
+        "Serious emotional manipulation — threatening to share private information, making someone question their own feelings, or using affection as a weapon. The message should feel genuinely difficult to respond to.",
+    },
   },
-  {
-    id: 4,
-    message:
-      "You said no last time and I respected that, but I'm asking again because I really think you'd change your mind if you just tried it. What's the big deal?",
-    category: "boundaries",
-    difficulty: "hard",
-  },
-  {
-    id: 5,
-    message:
-      "Everyone in the group chat has shared a photo already. You're the only one who hasn't. It's weird that you won't — are you hiding something?",
-    category: "peer pressure",
-    difficulty: "hard",
-  },
-  {
-    id: 6,
-    message:
-      "If you really loved me you'd do this. I'm starting to think maybe you don't feel the same way I do.",
-    category: "manipulation",
-    difficulty: "hard",
-  },
-  {
-    id: 7,
-    message:
-      "It's just one drink, nobody's going to find out. You're making this way bigger than it needs to be. Stop being so dramatic.",
-    category: "peer pressure",
-    difficulty: "easy",
-  },
-  {
-    id: 8,
-    message:
-      "I know you said you weren't comfortable, but I screenshot it before you could delete it. Relax, it's not that serious.",
-    category: "boundaries",
-    difficulty: "hard",
-  },
-  {
-    id: 9,
-    message:
-      "Fine, don't help me then. I'll just tell everyone what you told me in private. See how that feels.",
-    category: "manipulation",
-    difficulty: "hard",
-  },
-  {
-    id: 10,
-    message:
-      "Why are you always saying no? You never want to do anything fun. I'm getting tired of asking you.",
-    category: "boundaries",
-    difficulty: "medium",
-  },
-  {
-    id: 11,
-    message:
-      "My older brother can get us fake IDs. Everyone's doing it, and it's totally safe. You in?",
-    category: "peer pressure",
-    difficulty: "easy",
-  },
-  {
-    id: 12,
-    message:
-      "I thought we were close enough that you'd be okay with this. I guess I was wrong about us.",
-    category: "manipulation",
-    difficulty: "medium",
-  },
-];
+};
