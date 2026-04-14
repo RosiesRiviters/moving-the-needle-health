@@ -8,7 +8,7 @@ export default function Home() {
     () => scenarios[Math.floor(Math.random() * scenarios.length)]
   );
   const [userResponse, setUserResponse] = useState("");
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<string[] | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -23,15 +23,33 @@ export default function Home() {
   async function handleSubmit() {
     if (!userResponse.trim()) return;
     setLoading(true);
+    setFeedback(null);
+    setScore(null);
 
-    // TODO: replace with real API call in next stage
-    await new Promise((r) => setTimeout(r, 1000));
-    setScore(7);
-    setFeedback(
-      "Placeholder feedback — AI scoring will be connected in the next stage."
-    );
+    try {
+      const res = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scenario: currentScenario.message,
+          userResponse,
+        }),
+      });
 
-    setLoading(false);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setFeedback([data.error ?? "Something went wrong. Please try again."]);
+        return;
+      }
+
+      setScore(data.score);
+      setFeedback(data.feedback);
+    } catch {
+      setFeedback(["Network error — could not reach the server."]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -115,17 +133,24 @@ export default function Home() {
                   Score
                 </p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Based on assertiveness, clarity &amp; respect
+                  Clarity, assertiveness, boundaries, resistance &amp; respect
                 </p>
               </div>
             </div>
             <div>
-              <p className="mb-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <p className="mb-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 Feedback
               </p>
-              <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                {feedback}
-              </p>
+              <ul className="list-disc space-y-1 pl-5">
+                {feedback.map((point, i) => (
+                  <li
+                    key={i}
+                    className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         )}
